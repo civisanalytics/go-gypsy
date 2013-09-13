@@ -75,6 +75,15 @@ func (line *indentedLine) String() string {
 		strings.Repeat(" ", 0*line.indent), string(line.line))
 }
 
+func trimAfterAmpersand(line *indentedLine) {
+	for i:=0; i<len(line.line); i++ {
+		if line.line[i] == '&' {
+			line.line = line.line[:i]
+			return
+		}
+	}
+}
+
 func parseNode(r lineReader, ind int, initial Node) (node Node) {
 	first := true
 	node = initial
@@ -85,6 +94,8 @@ func parseNode(r lineReader, ind int, initial Node) (node Node) {
 		if line == nil {
 			break
 		}
+
+		trimAfterAmpersand(line)
 
 		if len(line.line) == 0 {
 			continue
